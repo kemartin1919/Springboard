@@ -114,6 +114,20 @@ ORDER BY cost DESC;
 
 /* Q9: This time, produce the same result as in Q8, but using a subquery. */
 
+SELECT *
+FROM
+	(SELECT name, CONCAT(firstname, ' ', surname), 
+	 	CASE WHEN firstname = 'GUEST' THEN slots * guestcost
+			 ELSE slots * membercost END AS cost 
+	 FROM Bookings AS b
+	 LEFT JOIN Members AS m
+		 ON b.memid = m.memid
+	 LEFT JOIN Facilities AS f
+		 ON b.facid = f.facid
+	 WHERE starttime LIKE '2012-09-14%' AND
+	 	CASE WHEN firstname = 'GUEST' THEN slots * guestcost > 30
+		     ELSE slots * membercost > 30 END) AS subq 
+ORDER BY cost DESC;
 
 /* PART 2: SQLite
 /* We now want you to jump over to a local instance of the database on your machine. 
